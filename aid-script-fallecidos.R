@@ -220,7 +220,7 @@ plot(dias_epi_morte,             # incidence object with age_cat as group
 ### PASO 4 
 ### Data Reporting
 
-
+Vamos a continuar?
 
 
 
