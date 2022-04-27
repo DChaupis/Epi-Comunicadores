@@ -23,7 +23,7 @@ Los objetivos específicos son:
 
 ## 🙋🏻‍♂️ ¿Cómo utilizo este tutorial?
 
-Es importante descargar el formato comprimible o **DOWNLOAD ZIP** de este repositorio y ubicarlo en la carpeta de su elección en su propia computadora, lo recomemdable sería lo descargue en `../Documentos/EpiComunicadores-main`. 
+Es importante descargar el formato comprimible o [**DOWNLOAD ZIP**](https://github.com/DChaupis/Epi-Comunicadores/archive/refs/heads/main.zip) de este repositorio y ubicarlo en la carpeta de su elección en su propia computadora, lo recomemdable sería lo descargue en `../Documentos/EpiComunicadores-main`. 
 
 Una vez descargada en la carpeta `/Epicomunicadores-main` se podrá abrir el proyecto-R llamado **OpenData-CovidPeru**, al abrirse se visualizará en la sección de *Files* ("la zona de ficheros") donde podrá hacer click para abrir el código ubicada en la carpeta `/Scripts`. Una vez abierto el código, por ejemplo, se muestra la ruta de como importar la dataset de [Fallecidos por Covid19](https://www.datosabiertos.gob.pe/dataset/fallecidos-por-covid-19-ministerio-de-salud-minsa/resource/4b7636f3-5f0c-4404-8526). 
 
