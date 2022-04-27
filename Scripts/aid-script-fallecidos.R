@@ -34,14 +34,21 @@ Objetivos del taller:
 
 set.seed(9)
 datamorte <- read.csv("fallecidos_covid.csv", sep = ";", header = T, 
-                    encoding = "UTF-8")
+                      encoding = "UTF-8")
 #View(dataepi)
 #file.info("positivos_covid_minsa.csv")$size
 
-#install.packages("DataExplorer")
 
-library(tidyverse, dplyr) # gestión de datos y visualización
-library(DataExplorer) # exploración estadística descriptiva en plots
+install.packages("pacman")
+library(pacman)
+pacman::p_load(
+  tidyverse, # data management + ggplot2 graphics 
+  dplyr, # data management
+  DataExplorer, # descriptive statistics
+  lubridate, # manipulate dates
+  zoo, # alternative manipulate dates 
+  incidence2) # epicurves of linelist data) 
+
 
 attach(datamorte) # adherir las variables paraa cada function()
 
@@ -91,7 +98,7 @@ datamorte2 <- datamorte %>%
 duplicated(UUID) # evaluamos si existen valores duplicados
 datamorte3 <- datamorte2 %>% 
   distinct(UUID, .keep_all = T) # solo quedaron los valores únicos, linea 63 again
-  
+
 summary(datamorte3) # un resumen del avance logrado
 
 ### Identificamos y removemos valores atípicos en nuestras variables de interés
@@ -128,7 +135,7 @@ datamorte3%>% # Ahora evaluamos los valores atípicos en la variables de interé
 
 datamorte4 <- datamorte3 %>% 
   filter(EDAD_DECLARADA>18 & EDAD_DECLARADA<120) # de esta forma solo nos quedamos con lo filtrado // 
-  # correr linea 109 cambiando la base nueva de dataepi3 -> dataepi4
+# correr linea 109 cambiando la base nueva de dataepi3 -> dataepi4
 
 
 ##------------------------------------------------------------------------------
@@ -139,9 +146,6 @@ datamorte4 <- datamorte3 %>%
 
 
 ### Conversion de valores numericos del formato fecha 
-
-library(lubridate)
-library(zoo)
 
 glimpse(datamorte4$FECHA_FALLECIMIENTO)
 head(datamorte4$FECHA_FALLECIMIENTO)
@@ -167,40 +171,38 @@ plot_bar(datamorte4$DEPARTAMENTO) # Identificando las n categorías de la variab
 
 # Recodificamos las demás variables de interés como Macroregiones
 datamorte4$MACRO <- recode(datamorte4$DEPARTAMENTO, 
-                                LIMA = "L/Callao",
-                                CALLAO = "L/Callao",
-                                ANCASH = "Norte",
-                                "LA LIBERTAD" = "Norte",
-                                PIURA = "Norte",
-                                CAJAMARCA = "Norte",
-                                LAMBAYEQUE = "Norte",
-                                TUMBES = "Norte",
-                                AREQUIPA = "Sur",
-                                APURIMAC = "Sur",
-                                CUSCO = "Sur",
-                                MOQUEGUA = "Sur",
-                                PUNO = "Sur",
-                                TACNA = "Sur",
-                                ICA = "Centro",
-                                JUNIN = "Centro",
-                                AYACUCHO = "Centro",
-                                PASCO = "Centro",
-                                HUANCAVELICA = "Centro",
-                                HUANUCO = "Centro",
-                                "MADRE DE DIOS" = "Selva",
-                                LORETO = "Selva",
-                                "SAN MARTIN" = "Selva",
-                                AMAZONAS = "Selva",
-                                UCAYALI = "Selva")
-                                       
+                           LIMA = "L/Callao",
+                           CALLAO = "L/Callao",
+                           ANCASH = "Norte",
+                           "LA LIBERTAD" = "Norte",
+                           PIURA = "Norte",
+                           CAJAMARCA = "Norte",
+                           LAMBAYEQUE = "Norte",
+                           TUMBES = "Norte",
+                           AREQUIPA = "Sur",
+                           APURIMAC = "Sur",
+                           CUSCO = "Sur",
+                           MOQUEGUA = "Sur",
+                           PUNO = "Sur",
+                           TACNA = "Sur",
+                           ICA = "Centro",
+                           JUNIN = "Centro",
+                           AYACUCHO = "Centro",
+                           PASCO = "Centro",
+                           HUANCAVELICA = "Centro",
+                           HUANUCO = "Centro",
+                           "MADRE DE DIOS" = "Selva",
+                           LORETO = "Selva",
+                           "SAN MARTIN" = "Selva",
+                           AMAZONAS = "Selva",
+                           UCAYALI = "Selva")
+
 #sort(summary(datamorte4$MACRO), decreasing = T)
 #glimpse(datamorte4$MACRO)
 plot_bar(datamorte4$MACRO)
 
 # Revisión rápida de patrones y tendencias
 
-# install.packages("incidence2")
-library(incidence2)
 
 # create the incidence object, aggregating cases by day
 dias_epi_morte <- incidence(       # create incidence object
@@ -212,8 +214,8 @@ dias_epi_morte <- incidence(       # create incidence object
 summary(dias_epi_morte)
 
 plot(dias_epi_morte,             # incidence object with age_cat as group
-    fill = MACRO)+          # age_cat is used for bar fill color (must have been set as a groups column above)
-    labs(fill = "Macroregiones") # change legend title from default "age_cat" (this is a ggplot2 modification)
+     fill = MACRO)+          # age_cat is used for bar fill color (must have been set as a groups column above)
+  labs(fill = "Macroregiones") # change legend title from default "age_cat" (this is a ggplot2 modification)
 
 days_morty = as.data.frame(dias_epi_morte)
 typeof(days_morty)
@@ -233,26 +235,10 @@ ggplot(datamorte4, aes(x=datamorte4$FECHA_FALLECIMIENTO,
   geom_histogram()
 
 glimpse(datamorte4)
-dc <- as.data.frame(datamorte4)
 
 
- 
-attach(data_conteo)
-data_conteo_b <- function(datamorte4){
-  
-  ggplot(datamorte4, aes(x=FECHA_FALLECIMIENTO, fill=date(FECHA_FALLECIMIENTO)))+
-    geom_histogram(binwidth=.5, bins = 30, alpha=0.9, position = "dodge", color="red")+
-    facet_wrap(~MACRO)
-}
-  
-  
-  
-  
-glimpse(data_conteo)
-typeof(dc)
 
 
-data_conteo <- as.data.frame(map_at(data_conteo, factor, .at = input$Macroregiones))
 
 
 ##------------------------------------------------------------------------------
@@ -260,166 +246,7 @@ data_conteo <- as.data.frame(map_at(data_conteo, factor, .at = input$Macroregion
 
 ### OBJETIVO 4 
 ### Data Reporting
-https://www.r-bloggers.com/2020/10/how-to-automate-pdf-reporting-with-r/
-
-
-library(shiny)
-#install.packages("plotly")
-library(plotly)
-data("mtcars")
-glimpse(mtcars)
-
-# Definiendo la Interface ------------- A
-ui <- fluidPage(
-  
-  # Titulo del panel
-  titlePanel("Mortalidad del COVID19 en Perú por Macroregiones"),
-   
-  # Capas de desarrollo
-  sidebarLayout(
-    sidebarPanel(
-      selectInput("Macroregiones", 
-                  "Elige tu macroregión:",
-                  choices = c("L/Callao","Norte","Sur","Centro","Selva"),
-                  selected = "L/Callao",
-                  multiple = FALSE)
-    ),
-    
-    # Generando el plot 
-    mainPanel(
-      plotOutput("distPlot")
-    )
-  )
-)
-
-
-# Configurando el server
-server <- function(input, output) {
-  
-  
-  output$distPlot <- renderPlot({
-    # transformando la data 
-    macros <- as.data.frame(map_at(datamorte4, factor, .at = input$Macroregiones))
-
-    ggplot(macros, aes(FECHA_FALLECIMIENTO))+
-      geom_histogram(binwidth=.5, bins = 30, alpha=0.9, 
-                     position = "dodge", color="red")
-      
-
-  })
-}
-
-# Corriendo la aplicación
-shinyApp(ui = ui, server = server)
-
-
-
-
-# Define UI for app that draws a histogram ---- B
-ui <- fluidPage(
-  
-  # App title ----
-  titlePanel("Casos de fallecidos por COVID19"),
-  
-  # Sidebar layout with input and output definitions ----
-  sidebarLayout(
-    
-    # Sidebar panel for inputs ----
-    sidebarPanel(
-      
-      # Input: Slider for the number of bins ----
-      sliderInput(inputId = "casos", names(data_conteo$MACRO),
-                  label = "N° de casos:",
-                  min = 1,
-                  max = 446,
-                  value = 56),
-      selectInput("Macroregiones",
-                  "Elige tu macroregión:",
-                  choices = c("L/Callao","Norte","Sur","Centro","Selva"),
-                  selected = c("L/Callao"))
-      
-    ),
-    
-    # Main panel for displaying outputs ----
-    mainPanel(
-      
-      # Output: Histogram ----
-      plotOutput(outputId = "distPlot")
-      
-    )
-  )
-)
-
-# Define server logic required to draw a histogram
-server <- function(input, output) {
-  
-  
-  output$distPlot <- renderPlot({
-    # generate bins based on input$bins from ui.R
-    x <- data_conteo$n_casos
-    bins <- seq(min(x), max(x), length.out = input$casos + 1)
-    
-    hist(x, breaks = bins, col = "red", border = "white",
-         xlab = "Frecuencia de fallecidos del 2020 al 2022",
-         main = "Hitograma de mortalidad por COVID19")
-    
-  })
-}
-
-# Run the application 
-shinyApp(ui = ui, server = server)
-
-
-
-
-# Define UI for app that draws a histogram ---- C
-ui <- fluidPage(
-  
-  # App title ----
-  titlePanel("Casos de fallecidos por COVID19"),
-  
-  # Sidebar layout with input and output definitions ----
-  sidebarLayout(
-    
-    # Sidebar panel for inputs ----
-    sidebarPanel(
-      
-      # Input: Slider for the number of bins ----
-      sliderInput(inputId = "casos",
-                  label = "N° de casos:",
-                  min = 1,
-                  max = 446,
-                  value = 56)
-      
-    ),
-    
-    # Main panel for displaying outputs ----
-    mainPanel(
-      
-      # Output: Histogram ----
-      plotOutput(outputId = "distPlot")
-      
-    )
-  )
-)
-
-# Define server logic required to draw a histogram
-server <- function(input, output) {
-  
-  
-  output$distPlot <- renderPlot({
-    # generate bins based on input$bins from ui.R
-    x <- as.data.frame(data_conteo$n_casos)
-    casos <- seq(min(x), max(x), length.out = input$casos + 1)
-    
-    ggplot(x, aes_string(x = input$casos, y = "casos"))+
-      geom_histogram()
-    
-  })
-}
-
-# Run the application 
-shinyApp(ui = ui, server = server)
+#https://www.r-bloggers.com/2020/10/how-to-automate-pdf-reporting-with-r/
 
 
 
