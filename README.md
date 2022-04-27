@@ -51,7 +51,7 @@ pacman::p_load(
   DataExplorer, # descriptive statistics
   lubridate, # manipulate dates
   zoo, # alternative manipulate dates 
-  incidence2 # epicurves of linelist data) 
+  incidence2) # epicurves of linelist data 
 
 ```
 
