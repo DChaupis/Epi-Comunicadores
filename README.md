@@ -16,10 +16,10 @@ El principal objetivo es:
 
 Los objetivos específicos son:
   
-  1. Preparación y revisión inicial de la metadata.
-  2. Limpieza de datos - Data cleaning.
-  3. Manipulación de datos - Data Screening.
-  4. Presentación de datos - Data Reporting.
+    1. Importación de la dataset revisando la metadata.
+    2. Limpieza de datos de valores perdidos y atípicos.
+    3. Manipulación de datos para una rápida evaluación.
+    4. Presentación de datos en un reporte de resultados.
 
 ## 🙋🏻‍♂️ ¿Cómo utilizo este tutorial?
 
